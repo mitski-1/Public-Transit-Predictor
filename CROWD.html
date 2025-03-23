@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Transit Crowd Predictor</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #1e1e2f;
+            text-align: center;
+            padding: 20px;
+            color: #ffffff;
+        }
+        .container {
+            background: #2a2a3b;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 3);
+            max-width: 600px;
+            margin: auto;
+        }
+        h1 {
+            color: #ffcc00;
+            font-weight: 600;
+        }
+        label {
+            font-size: 18px;
+            font-weight: 400;
+            color: #ffffff;
+        }
+        select {
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            border: 1px solid #ffcc00;
+            background: #3a3a4f;
+            color: #ffffff;
+            font-family: 'Poppins', sans-serif;
+        }
+        button {
+            background-color: #ffcc00;
+            color: #1e1e2f;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+            font-weight: 600;
+        }
+        button:hover {
+            background-color: #e6b800;
+        }
+        canvas {
+            margin-top: 20px;
+            max-width: 100%;
+            background: #2a2a3b;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Predict The Crowd </h1>
+        <label for="Square">Select Location:</label>
+        <select id="Square">
+            <option value="Dharampeth"> Dharampeth</option>
+            <option value="Ramdaspeth">Ramdaspeth</option>
+            <option value="Laxmi Nagar">Laxmi Nagar</option>
+            <option value="South Ambazari">South Ambazari</option>
+            <option value="Airport"> Airport</option>
+            <option value="Hingna">Hingna </option>
+            <option value="Buttibori">Buttibori</option>
+        </select>
+        <button onclick="predictCrowd()">Predict</button>
+        <canvas id="crowdChart"></canvas>
+    </div>
+    
+    <script>
+        const dummyData = {
+            Dharampeth: Array.from({length: 24}, () => Math.floor(Math.random() * 100)),
+            Ramdaspeth: Array.from({length: 24}, () => Math.floor(Math.random() * 100)),
+            "Laxmi Nagar": Array.from({length: 24}, () => Math.floor(Math.random() * 100)),
+            "South Ambazari": Array.from({length: 24}, () => Math.floor(Math.random() * 100)),
+            Airport: Array.from({length: 24}, () => Math.floor(Math.random() * 100)),
+            Hingna: Array.from({length: 24}, () => Math.floor(Math.random() * 100)),
+            Buttibori: Array.from({length: 24}, () => Math.floor(Math.random() * 100))
+        };
+
+        let crowdChart = null;
+
+        function predictCrowd() {
+            const station = document.getElementById("Square").value;
+            const pastData = dummyData[station];
+            const predictedData = pastData.map(value => value + Math.floor(Math.random() * 20 - 9));
+            renderChart(pastData, predictedData);
+        }
+
+        function renderChart(pastData, predictedData) {
+            const ctx = document.getElementById("crowdChart").getContext("2d");
+            if (crowdChart) {
+                crowdChart.destroy();
+            }
+            crowdChart = new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: Array.from({length: 24}, (_, i) => ${i}:00),
+                    datasets: [
+                        {
+                            label: "Past Data",
+                            data: pastData,
+                            borderColor: "#ff6b6b",
+                            backgroundColor: "rgba(255, 107, 107, 0.2)",
+                            fill: true
+                        },
+                        {
+                            label: "Predicted Data",
+                            data: predictedData,
+                            borderColor: "#4ecdc4",
+                            backgroundColor: "rgba(78, 205, 196, 0.2)",
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        x: { title: { display: true, text: "TIME" } },
+                        y: { title: { display: true, text: "Crowd Level" } }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
